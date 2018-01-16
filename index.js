@@ -29,7 +29,7 @@ function getTypeOf(value) {
 		.toLowerCase();
 }
 
-function hookRequire(handlebars, extensions) {
+function hookRequire(handlebars, extensions, compileOptions) {
 	extensions = extensions || [];
 
 	let originalHooks;
@@ -37,7 +37,7 @@ function hookRequire(handlebars, extensions) {
 	function compileFile(module, filename) {
 		const templateString = fs.readFileSync(filename, 'utf8');
 
-		module.exports = handlebars.compile(templateString);
+		module.exports = handlebars.compile(templateString, compileOptions);
 	}
 
 	function cacheHook(extension) {
@@ -164,7 +164,7 @@ HandlebarsWax.prototype.partials = function (partials, options) {
 	options.keygen = options.parsePartialName;
 	options.reducer = options.reducer || reducer;
 
-	const unhookRequire = hookRequire(options.handlebars, options.extensions);
+	const unhookRequire = hookRequire(options.handlebars, options.extensions, options.compileOptions);
 
 	options.handlebars.registerPartial(resolveValue(options, partials));
 
